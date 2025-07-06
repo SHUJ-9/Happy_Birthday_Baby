@@ -45,13 +45,14 @@
     width: 100vw;
     height: 160px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: flex-end;
     gap: 20px;
     z-index: 0;
     box-sizing: border-box;
-    padding-bottom: 10px;
+    padding: 0 20px 10px 20px;
     background: transparent;
+    pointer-events: none;
   }
   .grass {
     flex: 1 1 auto;
@@ -59,7 +60,6 @@
     justify-content: flex-start;
     align-items: flex-end;
     gap: 1px;
-    pointer-events: none;
   }
   .blade {
     width: 3px;
@@ -80,12 +80,11 @@
   .tulip-column {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-end;
+    justify-content: center;
     gap: 8px;
     max-height: 160px;
     overflow-y: auto;
-    width: 160px;
-    margin-right: 20px;
+    width: 100px;
     pointer-events: auto;
     cursor: grab;
     user-select: none;
@@ -149,6 +148,7 @@
     position: relative;
     z-index: 1;
     min-height: 70px;
+    transition: opacity 0.4s ease;
   }
   .button {
     display: inline-block;
@@ -178,6 +178,47 @@
     position: relative;
     z-index: 1;
   }
+
+  /* Falling petals container */
+  #falling-petals {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: visible;
+    z-index: 0;
+  }
+
+  /* Petal style */
+  .petal {
+    position: absolute;
+    user-select: none;
+    will-change: transform, opacity;
+    animation-name: fall, swayPetal;
+    animation-timing-function: linear, ease-in-out;
+    animation-iteration-count: 1, infinite;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes fall {
+    0% {
+      transform: translateY(-30px);
+      opacity: 1;
+    }
+    85% {
+      transform: translateY(calc(100vh - 160px));
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes swayPetal {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    50% { transform: translateX(15px) rotate(15deg); }
+  }
 </style>
 </head>
 <body>
@@ -192,15 +233,20 @@
     &copy; 2025 — Made with care
   </footer>
 
-  <!-- Garden ground with grass and tulips -->
+  <!-- Garden ground with grass and tulips on both sides -->
   <div class="garden-ground" aria-hidden="true">
+    <div class="tulip-column" id="leftTulips"></div>
     <div class="grass"></div>
-    <div class="tulip-column"></div>
+    <div class="tulip-column" id="rightTulips"></div>
   </div>
+
+  <!-- Container for falling petals -->
+  <div id="falling-petals"></div>
 
   <script>
     const flowerEmojis = ['🌷', '🌹', '🌻', '🌼', '💐'];
-    const tulipColumn = document.querySelector('.tulip-column');
+    const leftTulipColumn = document.getElementById('leftTulips');
+    const rightTulipColumn = document.getElementById('rightTulips');
 
     // Create grass blades
     function createGrass() {
@@ -212,9 +258,9 @@
       }
     }
 
-    // Create tulips
-    function createTulips() {
-      for(let i = 0; i < 100; i++) {
+    // Create tulips for both sides
+    function createTulips(column) {
+      for(let i = 0; i < 50; i++) {
         const tulip = document.createElement('div');
         tulip.className = 'tulip';
         tulip.textContent = '🌷';
@@ -228,15 +274,15 @@
           tulip.textContent = newFlower;
         });
 
-        tulipColumn.appendChild(tulip);
+        column.appendChild(tulip);
       }
     }
 
     // Drag and drop handlers variables
     let draggedEl = null;
 
-    function addDragAndDrop() {
-      tulipColumn.addEventListener('dragstart', e => {
+    function addDragAndDrop(column) {
+      column.addEventListener('dragstart', e => {
         if(e.target.classList.contains('tulip')) {
           draggedEl = e.target;
           draggedEl.classList.add('dragging');
@@ -245,70 +291,95 @@
         }
       });
 
-      tulipColumn.addEventListener('dragend', e => {
+      column.addEventListener('dragend', e => {
         if(draggedEl) {
           draggedEl.classList.remove('dragging');
           draggedEl = null;
-          tulipColumn.querySelectorAll('.tulip.over').forEach(el => el.classList.remove('over'));
+          column.querySelectorAll('.tulip.over').forEach(el => el.classList.remove('over'));
         }
       });
 
-      tulipColumn.addEventListener('dragover', e => {
+      column.addEventListener('dragover', e => {
         e.preventDefault();
         const target = e.target.closest('.tulip');
         if (!target || target === draggedEl) return;
-        tulipColumn.querySelectorAll('.tulip.over').forEach(el => el.classList.remove('over'));
+        column.querySelectorAll('.tulip.over').forEach(el => el.classList.remove('over'));
         target.classList.add('over');
       });
 
-      tulipColumn.addEventListener('dragleave', e => {
+      column.addEventListener('dragleave', e => {
         const target = e.target.closest('.tulip');
         if(target) target.classList.remove('over');
       });
 
-      tulipColumn.addEventListener('drop', e => {
+      column.addEventListener('drop', e => {
         e.preventDefault();
         const target = e.target.closest('.tulip');
         if(!target || !draggedEl || target === draggedEl) return;
         target.classList.remove('over');
-        const tulips = Array.from(tulipColumn.children);
+        const tulips = Array.from(column.children);
         const draggedIndex = tulips.indexOf(draggedEl);
         const targetIndex = tulips.indexOf(target);
         if(draggedIndex < targetIndex) {
-          tulipColumn.insertBefore(draggedEl, target.nextSibling);
+          column.insertBefore(draggedEl, target.nextSibling);
         } else {
-          tulipColumn.insertBefore(draggedEl, target);
+          column.insertBefore(draggedEl, target);
         }
       });
     }
 
-    // Messages
+    // Messages for your ex-girlfriend
     const messages = [
-      "I just wanted to say I miss you.",
-      "I hope you’re doing well.",
-      "Take care of yourself.",
-      "You cross my mind more than you know."
+      "You are like a garden in full bloom, brightening my days.",
+      "Even after everything, my heart still hopes for your happiness.",
+      "Every flower here reminds me of you—beautiful and unforgettable.",
+      "No matter where life takes us, I wish you all the love and joy.",
+      "Sometimes love is a garden we tend with patience and care.",
+      "Thank you for the memories, they will always bloom within me."
     ];
-
-    let currentIndex = 0;
-    const box = document.getElementById("messageBox");
-    const button = document.getElementById("nextBtn");
+    let messageIndex = 0;
 
     function showNextMessage() {
-      if (currentIndex < messages.length) {
-        box.textContent = messages[currentIndex];
-        currentIndex++;
-      } else if (currentIndex === messages.length) {
-        box.textContent = "This is all for now.";
-        button.disabled = true;
-        currentIndex++;
-      }
+      const msgBox = document.getElementById('messageBox');
+      messageIndex = (messageIndex + 1) % messages.length;
+      msgBox.style.opacity = 0;
+      setTimeout(() => {
+        msgBox.textContent = messages[messageIndex];
+        msgBox.style.opacity = 1;
+      }, 400);
     }
 
-    // Initialize
-    createGrass();
-    createTulips();
-    addDragAndDrop();
+    // Create falling petals dynamically
+    function createPetal() {
+      const petal = document.createElement('div');
+      petal.classList.add('petal');
+      petal.textContent = '🌸';
+      petal.style.left = Math.random() * 100 + 'vw';
+      petal.style.fontSize = (12 + Math.random() * 20) + 'px';
+      petal.style.animationDuration = (8 + Math.random() * 4) + 's, ' + (3 + Math.random() * 3) + 's';
+      petal.style.animationDelay = '0s, 0s';
+      document.getElementById('falling-petals').appendChild(petal);
+
+      // Remove petal after animation finishes (~12s)
+      setTimeout(() => {
+        petal.remove();
+      }, 12000);
+    }
+
+    // Create multiple petals continuously
+    function startFallingPetals() {
+      setInterval(createPetal, 300);
+    }
+
+    // Initialize everything on load
+    window.onload = () => {
+      createGrass();
+      createTulips(leftTulipColumn);
+      createTulips(rightTulipColumn);
+      addDragAndDrop(leftTulipColumn);
+      addDragAndDrop(rightTulipColumn);
+      startFallingPetals();
+    };
   </script>
 </body>
 </html>
