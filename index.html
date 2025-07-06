@@ -1,99 +1,314 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>My First List</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: 40px auto;
-      background-color: #f9f9f9;
-      padding: 20px;  /* Added padding value */
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    h1 {
-      color: #2c3e50;
-      text-align: center;
-    }
-    #listDescription {
-      font-style: italic;
-      color: #7f8c8d;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    ul {
-      list-style-type: disc;
-      padding-left: 20px;
-    }
-    li {
-      padding: 6px 0;
-      font-size: 18px;
-    }
-    form {
-      margin-top: 20px;
-      text-align: center;
-    }
-    input[type="text"] {
-      padding: 8px;
-      width: 70%;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-    button {
-      padding: 9px 15px;
-      font-size: 16px;
-      background-color: #2980b9;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-left: 10px;
-      transition: background-color 0.3s ease;
-    }
-    button:hover {
-      background-color: #3498db;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>For You - Garden</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #4b2e39;
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(75, 46, 57, 0.15);
+    text-align: center;
+    position: relative;
+    background: linear-gradient(to bottom, #87ceeb 0%, #a3d9a5 65%, #2d8c27 100%);
+    overflow-x: hidden;
+    min-height: 100vh;
+    box-sizing: border-box;
+    user-select: none;
+  }
+  /* Sun */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle at center, #ffe066 60%, #f4c242 90%);
+    border-radius: 50%;
+    box-shadow:
+      0 0 30px 8px #fff1a8,
+      0 0 50px 20px #ffe06688;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .garden-ground {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 160px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    gap: 20px;
+    z-index: 0;
+    box-sizing: border-box;
+    padding-bottom: 10px;
+    background: transparent;
+  }
+  .grass {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: 1px;
+    pointer-events: none;
+  }
+  .blade {
+    width: 3px;
+    height: 60px;
+    background: linear-gradient(to top, #206020, #4caf50);
+    border-radius: 2px;
+    transform-origin: bottom center;
+    animation: sway 3s ease-in-out infinite;
+  }
+  .blade:nth-child(even) {
+    height: 50px;
+    animation-delay: 1.5s;
+  }
+  @keyframes sway {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(8deg); }
+  }
+  .tulip-column {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    max-height: 160px;
+    overflow-y: auto;
+    width: 160px;
+    margin-right: 20px;
+    pointer-events: auto;
+    cursor: grab;
+    user-select: none;
+  }
+  .tulip {
+    animation: sway 3s ease-in-out infinite;
+    transform-origin: center bottom;
+    font-size: 28px;
+    user-select: none;
+    width: 32px;
+    height: 38px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    transition: transform 0.3s ease;
+    border-radius: 4px;
+  }
+  .tulip:hover {
+    transform: scale(1.3);
+  }
+  .tulip.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+  }
+  .tulip.over {
+    outline: 2px dashed #a1284f;
+    transform: scale(1.4);
+    z-index: 10;
+    position: relative;
+  }
+  .tulip:nth-child(odd) {
+    animation-delay: 0s;
+  }
+  .tulip:nth-child(even) {
+    animation-delay: 1.5s;
+  }
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    color: #d6336c;
+    position: relative;
+    z-index: 1;
+  }
+  .heart {
+    font-size: 4rem;
+    color: #d6336c;
+    animation: heartbeat 1.5s infinite;
+    position: relative;
+    z-index: 1;
+  }
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+  #messageBox {
+    font-size: 1.4rem;
+    line-height: 1.6;
+    min-height: 3em;
+    margin: 30px 0;
+    white-space: pre-wrap;
+    position: relative;
+    z-index: 1;
+    min-height: 70px;
+  }
+  .button {
+    display: inline-block;
+    padding: 12px 25px;
+    background-color: #d6336c;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    border: none;
+    position: relative;
+    z-index: 1;
+  }
+  .button:hover:not(:disabled) {
+    background-color: #a1284f;
+  }
+  .button:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+  footer {
+    margin-top: 40px;
+    font-size: 0.9rem;
+    color: #a67a8d;
+    position: relative;
+    z-index: 1;
+  }
+</style>
 </head>
 <body>
+  <h1>For You ❤️</h1>
+  <div class="heart">❤️</div>
 
-  <h1>My First List</h1>
-  <p id="listDescription">This is a simple list created for inspiration and project ideas.</p>
+  <p id="messageBox">Click the button to see something...</p>
 
-  <ul id="myList">
-    <li>Learn Java basics</li>
-    <li>Build a task manager app</li>
-    <li>Explore Python Flask</li>
-    <li>Create a personal portfolio website</li>
-  </ul>
+  <button class="button" id="nextBtn" onclick="showNextMessage()">Next</button>
 
-  <form id="addItemForm">
-    <input type="text" id="newItemInput" placeholder="Add new list item..." required />
-    <button type="submit">Add</button>
-  </form>
+  <footer>
+    &copy; 2025 — Made with care
+  </footer>
+
+  <!-- Garden ground with grass and tulips -->
+  <div class="garden-ground" aria-hidden="true">
+    <div class="grass"></div>
+    <div class="tulip-column"></div>
+  </div>
 
   <script>
-    const form = document.getElementById('addItemForm');
-    const input = document.getElementById('newItemInput');
-    const list = document.getElementById('myList');
+    const flowerEmojis = ['🌷', '🌹', '🌻', '🌼', '💐'];
+    const tulipColumn = document.querySelector('.tulip-column');
 
-    form.addEventListener('submit', function(e) {
-      e.preventDefault(); // prevent form from submitting the usual way
-
-      const newItemText = input.value.trim();
-      if (newItemText !== '') {
-        const newLi = document.createElement('li');
-        newLi.textContent = newItemText;
-        list.appendChild(newLi);
-        input.value = ''; // clear input after adding
+    // Create grass blades
+    function createGrass() {
+      const grassContainer = document.querySelector('.grass');
+      for(let i=0; i<40; i++) {
+        const blade = document.createElement('div');
+        blade.className = 'blade';
+        grassContainer.appendChild(blade);
       }
-    });
-  </script>
+    }
 
+    // Create tulips
+    function createTulips() {
+      for(let i = 0; i < 100; i++) {
+        const tulip = document.createElement('div');
+        tulip.className = 'tulip';
+        tulip.textContent = '🌷';
+        tulip.style.animationDelay = (Math.random() * 3) + 's';
+        tulip.setAttribute('draggable', 'true');
+
+        // Change flower emoji on click
+        tulip.addEventListener('click', e => {
+          e.stopPropagation();
+          const newFlower = flowerEmojis[Math.floor(Math.random() * flowerEmojis.length)];
+          tulip.textContent = newFlower;
+        });
+
+        tulipColumn.appendChild(tulip);
+      }
+    }
+
+    // Drag and drop handlers variables
+    let draggedEl = null;
+
+    function addDragAndDrop() {
+      tulipColumn.addEventListener('dragstart', e => {
+        if(e.target.classList.contains('tulip')) {
+          draggedEl = e.target;
+          draggedEl.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', '');
+        }
+      });
+
+      tulipColumn.addEventListener('dragend', e => {
+        if(draggedEl) {
+          draggedEl.classList.remove('dragging');
+          draggedEl = null;
+          tulipColumn.querySelectorAll('.tulip.over').forEach(el => el.classList.remove('over'));
+        }
+      });
+
+      tulipColumn.addEventListener('dragover', e => {
+        e.preventDefault();
+        const target = e.target.closest('.tulip');
+        if (!target || target === draggedEl) return;
+        tulipColumn.querySelectorAll('.tulip.over').forEach(el => el.classList.remove('over'));
+        target.classList.add('over');
+      });
+
+      tulipColumn.addEventListener('dragleave', e => {
+        const target = e.target.closest('.tulip');
+        if(target) target.classList.remove('over');
+      });
+
+      tulipColumn.addEventListener('drop', e => {
+        e.preventDefault();
+        const target = e.target.closest('.tulip');
+        if(!target || !draggedEl || target === draggedEl) return;
+        target.classList.remove('over');
+        const tulips = Array.from(tulipColumn.children);
+        const draggedIndex = tulips.indexOf(draggedEl);
+        const targetIndex = tulips.indexOf(target);
+        if(draggedIndex < targetIndex) {
+          tulipColumn.insertBefore(draggedEl, target.nextSibling);
+        } else {
+          tulipColumn.insertBefore(draggedEl, target);
+        }
+      });
+    }
+
+    // Messages
+    const messages = [
+      "I just wanted to say I miss you.",
+      "I hope you’re doing well.",
+      "Take care of yourself.",
+      "You cross my mind more than you know."
+    ];
+
+    let currentIndex = 0;
+    const box = document.getElementById("messageBox");
+    const button = document.getElementById("nextBtn");
+
+    function showNextMessage() {
+      if (currentIndex < messages.length) {
+        box.textContent = messages[currentIndex];
+        currentIndex++;
+      } else if (currentIndex === messages.length) {
+        box.textContent = "This is all for now.";
+        button.disabled = true;
+        currentIndex++;
+      }
+    }
+
+    // Initialize
+    createGrass();
+    createTulips();
+    addDragAndDrop();
+  </script>
 </body>
 </html>
