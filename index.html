@@ -1,257 +1,247 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>For You - Garden</title>
-<style>
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #4b2e39;
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(75, 46, 57, 0.15);
-    text-align: center;
-    position: relative;
-    background: linear-gradient(to bottom, #87ceeb 0%, #a3d9a5 65%, #2d8c27 100%);
-    overflow-x: hidden;
-    min-height: 100vh;
-    box-sizing: border-box;
-    user-select: none;
-  }
-  /* Sun */
-  body::before {
-    content: "";
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    width: 100px;
-    height: 100px;
-    background: radial-gradient(circle at center, #ffe066 60%, #f4c242 90%);
-    border-radius: 50%;
-    box-shadow:
-      0 0 30px 8px #fff1a8,
-      0 0 50px 20px #ffe06688;
-    z-index: 0;
-    pointer-events: none;
-  }
-  .garden-ground {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100vw;
-    height: 160px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 20px;
-    z-index: 0;
-    box-sizing: border-box;
-    padding: 0 20px 10px 20px;
-    background: transparent;
-    pointer-events: none;
-  }
-  .grass {
-    flex: 1 1 auto;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-end;
-    gap: 1px;
-  }
-  .blade {
-    width: 3px;
-    height: 60px;
-    background: linear-gradient(to top, #206020, #4caf50);
-    border-radius: 2px;
-    transform-origin: bottom center;
-    animation: sway 3s ease-in-out infinite;
-  }
-  .blade:nth-child(even) {
-    height: 50px;
-    animation-delay: 1.5s;
-  }
-  @keyframes sway {
-    0%, 100% { transform: rotate(0deg); }
-    50% { transform: rotate(8deg); }
-  }
-  .tulip-column {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-    max-height: 160px;
-    overflow-y: auto;
-    width: 100px;
-    pointer-events: auto;
-    cursor: grab;
-    user-select: none;
-  }
-  .tulip {
-    animation: sway 3s ease-in-out infinite;
-    transform-origin: center bottom;
-    font-size: 28px;
-    user-select: none;
-    width: 40px;
-    height: 42px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    transition: transform 0.3s ease, filter 0.3s ease;
-    border-radius: 6px;
-
-    /* 3D effect styles */
-    text-shadow:
-      2px 2px 2px rgba(0,0,0,0.15),
-      0 0 8px rgba(255,192,203,0.7);
-    perspective: 400px;
-    backface-visibility: hidden;
-  }
-  .tulip:hover {
-    transform: scale(1.4) rotateX(20deg) rotateY(10deg);
-    filter: drop-shadow(0 5px 4px rgba(0,0,0,0.3));
-    cursor: pointer;
-    z-index: 10;
-    position: relative;
-  }
-  .tulip.dragging {
-    opacity: 0.5;
-    cursor: grabbing;
-  }
-  .tulip.over {
-    outline: 2px dashed #a1284f;
-    transform: scale(1.4);
-    z-index: 10;
-    position: relative;
-  }
-  .tulip:nth-child(odd) {
-    animation-delay: 0s;
-  }
-  .tulip:nth-child(even) {
-    animation-delay: 1.5s;
-  }
-  h1 {
-    font-size: 3rem;
-    margin-bottom: 10px;
-    color: #d6336c;
-    position: relative;
-    z-index: 1;
-  }
-  .heart {
-    font-size: 4rem;
-    color: #d6336c;
-    animation: heartbeat 1.5s infinite;
-    position: relative;
-    z-index: 1;
-  }
-  @keyframes heartbeat {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-  }
-  #messageBox {
-    font-size: 1.4rem;
-    line-height: 1.6;
-    min-height: 3em;
-    margin: 30px 0;
-    white-space: pre-wrap;
-    position: relative;
-    z-index: 1;
-    min-height: 70px;
-    transition: opacity 0.4s ease;
-  }
-  .button {
-    display: inline-block;
-    padding: 12px 25px;
-    background-color: #d6336c;
-    color: white;
-    text-decoration: none;
-    border-radius: 25px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-    cursor: pointer;
-    border: none;
-    position: relative;
-    z-index: 1;
-  }
-  .button:hover:not(:disabled) {
-    background-color: #a1284f;
-  }
-  .button:disabled {
-    opacity: 0.5;
-    cursor: default;
-  }
-  footer {
-    margin-top: 40px;
-    font-size: 0.9rem;
-    color: #a67a8d;
-    position: relative;
-    z-index: 1;
-  }
-
-  /* Falling petals container */
-  #falling-petals {
-    pointer-events: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    overflow: visible;
-    z-index: 0;
-  }
-
-  /* Petal style */
-  .petal {
-    position: absolute;
-    user-select: none;
-    will-change: transform, opacity;
-    animation-name: fall, swayPetal;
-    animation-timing-function: linear, ease-in-out;
-    animation-iteration-count: 1, infinite;
-    animation-fill-mode: forwards;
-  }
-
-  @keyframes fall {
-    0% {
-      transform: translateY(-30px);
-      opacity: 1;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>For You - Garden</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #4b2e39;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(75, 46, 57, 0.15);
+      text-align: center;
+      position: relative;
+      background: linear-gradient(to bottom, #87ceeb 0%, #a3d9a5 65%, #2d8c27 100%);
+      overflow-x: hidden;
+      min-height: 100vh;
+      box-sizing: border-box;
+      user-select: none;
     }
-    85% {
-      transform: translateY(calc(100vh - 160px));
-      opacity: 1;
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle at center, #ffe066 60%, #f4c242 90%);
+      border-radius: 50%;
+      box-shadow: 0 0 30px 8px #fff1a8, 0 0 50px 20px #ffe06688;
+      z-index: 0;
+      pointer-events: none;
     }
-    100% {
-      opacity: 0;
+
+    .garden-ground {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100vw;
+      height: 160px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 20px;
+      z-index: 0;
+      box-sizing: border-box;
+      padding: 0 20px 10px 20px;
+      background: transparent;
+      pointer-events: none;
     }
-  }
-  @keyframes swayPetal {
-    0%, 100% { transform: translateX(0) rotate(0deg); }
-    50% { transform: translateX(15px) rotate(15deg); }
-  }
-</style>
+
+    .grass {
+      flex: 1 1 auto;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-end;
+      gap: 1px;
+    }
+
+    .blade {
+      width: 3px;
+      height: 60px;
+      background: linear-gradient(to top, #206020, #4caf50);
+      border-radius: 2px;
+      transform-origin: bottom center;
+      animation: sway 3s ease-in-out infinite;
+    }
+
+    .blade:nth-child(even) {
+      height: 50px;
+      animation-delay: 1.5s;
+    }
+
+    @keyframes sway {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(8deg); }
+    }
+
+    .tulip-column {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      max-height: 160px;
+      overflow-y: auto;
+      width: 100px;
+      pointer-events: auto;
+      cursor: grab;
+      user-select: none;
+      perspective: 800px; /* Enable 3D for children */
+    }
+
+    .tulip {
+      animation: sway 3s ease-in-out infinite;
+      transform-origin: center bottom;
+      font-size: 28px;
+      width: 40px;
+      height: 42px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      transition: transform 0.3s ease, filter 0.3s ease;
+      border-radius: 6px;
+      user-select: none;
+      text-shadow: 2px 2px 2px rgba(0,0,0,0.15), 0 0 8px rgba(255,192,203,0.7);
+    }
+
+    .tulip:hover {
+      transform: scale(1.4) rotateX(15deg) rotateY(10deg);
+      filter: drop-shadow(0 5px 4px rgba(0,0,0,0.3));
+      cursor: pointer;
+      z-index: 10;
+      position: relative;
+    }
+
+    .tulip.dragging {
+      opacity: 0.5;
+      cursor: grabbing;
+    }
+
+    .tulip.over {
+      outline: 2px dashed #a1284f;
+      transform: scale(1.4);
+      z-index: 10;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      color: #d6336c;
+      position: relative;
+      z-index: 1;
+    }
+
+    .heart {
+      font-size: 4rem;
+      color: #d6336c;
+      animation: heartbeat 1.5s infinite;
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    #messageBox {
+      font-size: 1.4rem;
+      line-height: 1.6;
+      min-height: 3em;
+      margin: 30px 0;
+      white-space: pre-wrap;
+      position: relative;
+      z-index: 1;
+      min-height: 70px;
+      transition: opacity 0.4s ease;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 25px;
+      background-color: #d6336c;
+      color: white;
+      text-decoration: none;
+      border-radius: 25px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+      border: none;
+      position: relative;
+      z-index: 1;
+    }
+
+    .button:hover:not(:disabled) {
+      background-color: #a1284f;
+    }
+
+    .button:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.9rem;
+      color: #a67a8d;
+      position: relative;
+      z-index: 1;
+    }
+
+    #falling-petals {
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: visible;
+      z-index: 0;
+    }
+
+    .petal {
+      position: absolute;
+      user-select: none;
+      will-change: transform, opacity;
+      animation-name: fall, swayPetal;
+      animation-timing-function: linear, ease-in-out;
+      animation-iteration-count: 1, infinite;
+      animation-fill-mode: forwards;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-30px); opacity: 1; }
+      85% { transform: translateY(calc(100vh - 160px)); opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    @keyframes swayPetal {
+      0%, 100% { transform: translateX(0) rotate(0deg); }
+      50% { transform: translateX(15px) rotate(15deg); }
+    }
+  </style>
 </head>
 <body>
   <h1>For You ❤️</h1>
   <div class="heart">❤️</div>
-
   <p id="messageBox">Click the button to see something...</p>
-
   <button class="button" id="nextBtn" onclick="showNextMessage()">Next</button>
 
-  <footer>
-    &copy; 2025 — Made with care
-  </footer>
+  <footer>&copy; 2025 — Made with care</footer>
 
-  <!-- Garden ground with grass and tulips on both sides -->
   <div class="garden-ground" aria-hidden="true">
     <div class="tulip-column" id="leftTulips"></div>
     <div class="grass"></div>
     <div class="tulip-column" id="rightTulips"></div>
   </div>
 
-  <!-- Container for falling petals -->
   <div id="falling-petals"></div>
 
   <script>
@@ -259,97 +249,18 @@
     const leftTulipColumn = document.getElementById('leftTulips');
     const rightTulipColumn = document.getElementById('rightTulips');
 
-    // Create grass blades
     function createGrass() {
       const grassContainer = document.querySelector('.grass');
-      for(let i=0; i<40; i++) {
+      for (let i = 0; i < 40; i++) {
         const blade = document.createElement('div');
         blade.className = 'blade';
         grassContainer.appendChild(blade);
       }
     }
 
-    // Create tulips for both sides
     function createTulips(column) {
-      for(let i = 0; i < 50; i++) {
+      for (let i = 0; i < 50; i++) {
         const tulip = document.createElement('div');
         tulip.className = 'tulip';
         tulip.textContent = '🌷';
-        tulip.style.animationDelay = (Math.random() * 3) + 's';
-        tulip.setAttribute('draggable', 'true');
-
-        // Change flower emoji on click
-        tulip.addEventListener('click', e => {
-          e.stopPropagation();
-          const newFlower = flowerEmojis[Math.floor(Math.random() * flowerEmojis.length)];
-          tulip.textContent = newFlower;
-        });
-
-        column.appendChild(tulip);
-      }
-    }
-
-    // Drag and drop handlers variables
-    let draggedEl = null;
-
-    function addDragAndDrop(column) {
-      column.addEventListener('dragstart', e => {
-        if(e.target.classList.contains('tulip')) {
-          draggedEl = e.target;
-          draggedEl.classList.add('dragging');
-          e.dataTransfer.effectAllowed = 'move';
-          e.dataTransfer.setData('text/plain', '');
-        }
-      });
-
-      column.addEventListener('dragend', e => {
-        if(draggedEl) {
-          draggedEl.classList.remove('dragging');
-          draggedEl = null;
-          column.querySelectorAll('.tulip.over').forEach(el => el.classList.remove('over'));
-        }
-      });
-
-      column.addEventListener('dragover', e => {
-        e.preventDefault();
-        const target = e.target.closest('.tulip');
-        if (!target || target === draggedEl) return;
-        column.querySelectorAll('.tulip.over').forEach(el => el.classList.remove('over'));
-        target.classList.add('over');
-      });
-
-      column.addEventListener('dragleave', e => {
-        const target = e.target.closest('.tulip');
-        if(target) target.classList.remove('over');
-      });
-
-      column.addEventListener('drop', e => {
-        e.preventDefault();
-        const target = e.target.closest('.tulip');
-        if(!target || !draggedEl || target === draggedEl) return;
-        target.classList.remove('over');
-        const tulips = Array.from(column.children);
-        const draggedIndex = tulips.indexOf(draggedEl);
-        const targetIndex = tulips.indexOf(target);
-        if(draggedIndex < targetIndex) {
-          column.insertBefore(draggedEl, target.nextSibling);
-        } else {
-          column.insertBefore(draggedEl, target);
-        }
-      });
-    }
-
-    // Messages for your ex-girlfriend
-    const messages = [
-      "You are like a garden in full bloom, brightening my days.",
-      "Even after everything, my heart still hopes for your happiness.",
-      "Every flower here reminds me of you—beautiful and unforgettable.",
-      "No matter where life takes us, I wish you all the love and joy.",
-      "Sometimes love is a garden we tend with patience and care.",
-      "Thank you for the memories, they will always bloom within me."
-    ];
-    let messageIndex = 0;
-
-    function showNextMessage() {
-      const msgBox = document.getElementById('messageBox');
-      messageIndex = (message
+        tulip.style.animationDelay = (Math
