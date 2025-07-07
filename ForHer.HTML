@@ -16,7 +16,7 @@
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
-    padding-bottom: 300px; /* space for tulips */
+    padding-bottom: 300px;
   }
   h1 { font-size: 3rem; margin: 20px 0 0; color: #d6336c; }
   .heart { font-size: 4rem; animation: heartbeat 1.5s infinite; }
@@ -41,12 +41,6 @@
     width: 300px;
     max-width: 100%;
   }
-  #userInfo {
-    margin-top: 15px;
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #d6336c;
-  }
 </style>
 </head>
 <body>
@@ -54,13 +48,12 @@
 <h1>For You ❤️</h1>
 <div class="heart">❤️</div>
 <div id="messageBox">Click "Next" to see a special message...</div>
+
 <div id="controls">
   <button id="nextBtn">Next Message</button>
-  <button id="loginBtn">Login with Spotify</button>
 </div>
 
-<div id="userInfo"></div>
-
+<!-- ✅ Spotify Player -->
 <div id="spotifyPlayer">
   <iframe style="border-radius:12px" 
     src="https://open.spotify.com/embed/track/0D1ecMMsSIpJbjPoJMHGkV?utm_source=generator" 
@@ -70,37 +63,44 @@
 </div>
 
 <div id="timer"></div>
-
 <div id="garden"></div>
 
 <footer style="margin-top:30px; font-size:.9rem; color:#a67a8d;">&copy; 2025 — Made with care</footer>
 
 <script>
-// Messages
+// ✅ Messages with no loop
 const messages = [
-"Thinking of you and hoping you’re well.",
-"Sometimes I miss the moments we shared.",
-"Wishing you happiness wherever you are.",
-"There’s a quiet space left by your absence.",
-"I hope life is treating you kindly."
+  "Thinking of you and hoping you’re well.",
+  "Sometimes I miss the moments we shared.",
+  "Wishing you happiness wherever you are.",
+  "There’s a quiet space left by your absence.",
+  "I hope life is treating you kindly."
 ];
-let idx=0;
+let idx = 0;
 document.getElementById('nextBtn').onclick = () => {
-  idx=(idx+1)%messages.length;
-  const box=document.getElementById('messageBox');
-  box.style.opacity=0;
-  setTimeout(()=>{box.textContent=messages[idx];box.style.opacity=1;},300);
+  if (idx < messages.length - 1) {
+    idx++;
+    const box = document.getElementById('messageBox');
+    box.style.opacity = 0;
+    setTimeout(() => {
+      box.textContent = messages[idx];
+      box.style.opacity = 1;
+    }, 300);
+  } else {
+    document.getElementById('nextBtn').disabled = true;
+    document.getElementById('nextBtn').textContent = "No more messages 💌";
+  }
 };
 
 // Countdown
-const target=new Date('2025-09-01T00:00:00');
-function updateTimer(){
-  const now=new Date(), diff=target-now;
-  document.getElementById('timer').textContent = diff>0
-   ? `Countdown: ${Math.floor(diff/86400000)}d ${Math.floor(diff%86400000/3600000)}h ${Math.floor(diff%3600000/60000)}m`
-   : '🌸 It’s today! 🌸';
+const target = new Date('2025-09-01T00:00:00');
+function updateTimer() {
+  const now = new Date(), diff = target - now;
+  document.getElementById('timer').textContent = diff > 0
+    ? `Countdown: ${Math.floor(diff / 86400000)}d ${Math.floor(diff % 86400000 / 3600000)}h ${Math.floor(diff % 3600000 / 60000)}m`
+    : '🌸 It’s today! 🌸';
 }
-setInterval(updateTimer,1000);
+setInterval(updateTimer, 1000);
 updateTimer();
 
 // Garden generation and drag-drop
@@ -110,57 +110,34 @@ const tulipURLs = [
   "https://gallery.yopriceville.com/var/resizes/Free-Clipart-Pictures/Flowers-PNG/Red_Tulip_Transparent_Clip_Art_Image.png?m=1629831687",
   "https://purepng.com/photo/18869/tulip.png"
 ];
-function rand(min,max){return min+Math.random()*(max-min);}
-
-for(let row=0; row<3; row++){  
-  for(let i=0; i<20; i++){  
-    const img=document.createElement('img');
-    img.src=tulipURLs[Math.floor(Math.random()*tulipURLs.length)];
-    img.className='tulip';
-    img.style.bottom=`${10 + row*90 + rand(-10,10)}px`;
-    img.style.left=`${rand(0,90)}%`;
-    img.style.transform=`scale(${rand(0.8,1.3)})`;
-    img.draggable=true;
+function rand(min, max) {
+  return min + Math.random() * (max - min);
+}
+for (let row = 0; row < 3; row++) {
+  for (let i = 0; i < 20; i++) {
+    const img = document.createElement('img');
+    img.src = tulipURLs[Math.floor(Math.random() * tulipURLs.length)];
+    img.className = 'tulip';
+    img.style.bottom = `${10 + row * 90 + rand(-10, 10)}px`;
+    img.style.left = `${rand(0, 90)}%`;
+    img.style.transform = `scale(${rand(0.8, 1.3)})`;
+    img.draggable = true;
     garden.appendChild(img);
 
-    img.addEventListener('dragstart',e=>{
-      e.dataTransfer.setData('text/plain','');
-      img.style.opacity=0.5;
+    img.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', '');
+      img.style.opacity = 0.5;
     });
-    img.addEventListener('dragend',e=>{
-      img.style.opacity=1;
-      const x=e.pageX/window.innerWidth*100;
-      img.style.left=`${x}%`;
+    img.addEventListener('dragend', e => {
+      img.style.opacity = 1;
+      const x = e.pageX / window.innerWidth * 100;
+      img.style.left = `${x}%`;
     });
   }
 }
 
-garden.addEventListener('dragover',e=>e.preventDefault());
-garden.addEventListener('drop',e=>e.preventDefault());
-
-// Spotify login flow
-
-document.getElementById('loginBtn').onclick = () => {
-  // Redirect user to backend login route (change URL if needed)
-  window.location.href = 'http://localhost:8888/login';
-};
-
-// On page load, check for access_token in URL
-window.onload = async function() {
-  const params = new URLSearchParams(window.location.search);
-  const token = params.get('access_token');
-  if (token) {
-    try {
-      const res = await fetch('https://api.spotify.com/v1/me', {
-        headers: { Authorization: 'Bearer ' + token }
-      });
-      const data = await res.json();
-      document.getElementById('userInfo').textContent = 'Logged in as: ' + data.display_name;
-    } catch (e) {
-      console.error('Error fetching Spotify profile', e);
-    }
-  }
-};
+garden.addEventListener('dragover', e => e.preventDefault());
+garden.addEventListener('drop', e => e.preventDefault());
 </script>
 
 </body>
