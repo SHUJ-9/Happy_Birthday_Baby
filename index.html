@@ -41,6 +41,12 @@
     width: 300px;
     max-width: 100%;
   }
+  #userInfo {
+    margin-top: 15px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #d6336c;
+  }
 </style>
 </head>
 <body>
@@ -50,13 +56,15 @@
 <div id="messageBox">Click "Next" to see a special message...</div>
 <div id="controls">
   <button id="nextBtn">Next Message</button>
-  <!-- Removed musicBtn because Spotify embed replaces that -->
+  <button id="loginBtn">Login with Spotify</button>
 </div>
+
+<div id="userInfo"></div>
 
 <div id="spotifyPlayer">
   <iframe style="border-radius:12px" 
-    src="https://open.spotify.com/embed/track/0FTmksd2dxiE5e3rWyJXs6?utm_source=generator" 
-    width="100%" height="80" frameborder="0" 
+    src="https://open.spotify.com/embed/track/0D1ecMMsSIpJbjPoJMHGkV?utm_source=generator" 
+    width="100%" height="352" frameborder="0" 
     allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
     loading="lazy"></iframe>
 </div>
@@ -130,6 +138,30 @@ for(let row=0; row<3; row++){
 garden.addEventListener('dragover',e=>e.preventDefault());
 garden.addEventListener('drop',e=>e.preventDefault());
 
+// Spotify login flow
+
+document.getElementById('loginBtn').onclick = () => {
+  // Redirect user to backend login route (change URL if needed)
+  window.location.href = 'http://localhost:8888/login';
+};
+
+// On page load, check for access_token in URL
+window.onload = async function() {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('access_token');
+  if (token) {
+    try {
+      const res = await fetch('https://api.spotify.com/v1/me', {
+        headers: { Authorization: 'Bearer ' + token }
+      });
+      const data = await res.json();
+      document.getElementById('userInfo').textContent = 'Logged in as: ' + data.display_name;
+    } catch (e) {
+      console.error('Error fetching Spotify profile', e);
+    }
+  }
+};
 </script>
+
 </body>
 </html>
