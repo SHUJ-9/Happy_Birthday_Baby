@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Romantic Tulip Garden</title>
+  <title>^^</title>
   <style>
     body {
       margin: 0;
@@ -17,7 +17,7 @@
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: #d6336c;
+      background: #00c9f1ff;
       z-index: 9999;
       display: flex;
       flex-direction: column;
@@ -157,7 +157,7 @@
 
 <!-- 🌷 MAIN CONTENT -->
 <div id="mainContent" style="display: none; flex-direction: column; align-items: center;">
-  <h1>About You</h1>
+  <h1>ABOUT YOU ^^ </h1>
   
   <div id="messageBox">Click "Next" to see a special message...</div>
 
@@ -166,12 +166,12 @@
   </div>
 
   <audio id="bgMusic" loop>
-    <source src="AboutYou.mp3" type="audio/mpeg" />
+    <source src="LilyOfTheValley.mp3" type="audio/mpeg" />
   </audio>
 
   <div id="timer"></div>
   <div id="garden"></div>
-  <footer>^^ ~ secret web</footer>
+  <footer>FO YOU ~ secret </footer>
 </div>
 
 <script>
@@ -179,7 +179,7 @@
   const username = document.getElementById("username").value.trim(); // Still retrieving, in case you want to use it later
   const password = document.getElementById("password").value.trim();
 
-  if (password === "imissyou") {
+  if (password === "tulips") {
     document.getElementById("loginScreen").style.display = "none";
     document.getElementById("mainContent").style.display = "flex";
   } else {
@@ -193,30 +193,21 @@
 
 
   // 🌸 MESSAGE LOGIC
-  const messages = [
-    "Thinking of you and hoping you’re well.",
-    "Sometimes I miss the moments we shared.",
-    "Wishing you happiness wherever you are.",
-    "There’s a quiet space left by your absence.",
-    "Some days, memories bloom like tulips in my mind.",
-    "Soft moments return in silence, bringing warmth to the heart.",
-    "I wonder if you still smile at the same things.",
-    "If time ever brings us back together, I hope we’ll be kinder, softer.",
-    "In quiet moments, I think of you not with longing, but with peace.",
-    "The world moves fast, but memories of your smile stay with me.",
-    "Your presence was like spring gentle, renewing, always welcome.",
-    "Even distance can't erase something once deeply felt.",
-    "Wherever you are, I hope you feel calm, safe, and loved.",
-    "Some feelings don’t fade they just settle gently into who we become.",
-    "You are still a beautiful part of my thoughts, and I carry that gently."
-  ];
+const messages = [
+  "I miss you, especially that moment when I first met you—at the place I call the samurai, beside the sea, HAHAHAH!",
+  "That was the first time I felt like everything was just so right with you.",
+  "I miss the way you told me about your day,",
+  "and the moment we took that picture of the sunset together.",
+  "You made me feel so much better just by being near you."
+];
+
   let idx = 0;
   let musicStarted = false;
 
   document.getElementById('nextBtn').onclick = () => {
     const audio = document.getElementById('bgMusic');
     if (!musicStarted) {
-      audio.currentTime = 80; // start at 80 seconds
+      audio.currentTime = 5; // start at 80 seconds
       audio.volume = 1;
       audio.play().catch(e => console.error("Audio error:", e));
       musicStarted = true;
@@ -252,9 +243,9 @@
 const garden = document.getElementById('garden');
 const tulipURLs = [
   "https://gallery.yopriceville.com/var/resizes/Free-Clipart-Pictures/Flowers-PNG/Red_Tulip_Flower_Transparent_Image.png?m=1629831687",
-  "https://gallery.yopriceville.com/var/resizes/Free-Clipart-Pictures/Flowers-PNG/Red_Tulip_Transparent_Clip_Art_Image.png?m=1629831687",
-  "https://purepng.com/photo/18869/tulip.png"
+  "https://gallery.yopriceville.com/var/resizes/Free-Clipart-Pictures/Flowers-PNG/Red_Tulip_Transparent_Clip_Art_Image.png?m=1629831687"
 ];
+
 
 function rand(min, max) {
   return min + Math.random() * (max - min);
@@ -267,10 +258,10 @@ for (let i = 0; i < tulipCount; i++) {
   img.className = 'tulip';
   
   // Only in bottom 300px area
-  img.style.bottom = `${rand(-40, 400)}px`;
+  img.style.bottom = `${rand(-80, 400)}px`;
 
   // Adjust for new smaller width
-  img.style.left = `${rand(0, window.innerWidth - 40)}px`;
+  img.style.left = `${rand(0, window.innerWidth - 80)}px`;
 
   // Add slight random scaling for realism
   const scale = rand(0.8, 1.1).toFixed(2);
