@@ -2,139 +2,276 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jush A. Muit | Web Developer</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>^^</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
       margin: 0;
-      padding: 0;
-      line-height: 1.6;
-      background: #f9f9f9;
-      color: #333;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #87ceeb 0%, #a3d9a5 60%, #2d8c27 100%);
+      overflow-x: hidden;
+      overflow-y: auto;
+      height: 100vh;
     }
-
-    header, footer {
-      background: #1a1a1a;
+    #loginScreen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #00c9f1ff;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       color: #fff;
-      text-align: center;
-      padding: 2rem 1rem;
     }
-
-    h1, h2, h3 {
-      margin-bottom: 1rem;
+    #loginScreen h2 {
+      margin-bottom: 20px;
+      font-weight: 600;
     }
-
-    section {
-      padding: 2rem 1rem;
-      max-width: 900px;
-      margin: auto;
-    }
-
-    .cta-btn {
-      display: inline-block;
-      background: #4CAF50;
-      color: white;
-      padding: 0.75rem 1.5rem;
+    #loginScreen input {
+      padding: 10px;
+      font-size: 1rem;
+      margin: 10px 0;
+      width: 250px;
+      box-sizing: border-box;
       border-radius: 6px;
-      text-decoration: none;
-      font-weight: bold;
-      margin-top: 1rem;
+      border: none;
+      outline: none;
     }
-
-    .project {
-      border: 1px solid #ddd;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 1.5rem;
-      background: #fff;
+    #loginScreen input::placeholder {
+      color: #aaa;
     }
-
-    .project img {
-      max-width: 100%;
-      border-radius: 6px;
-      margin-bottom: 0.75rem;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    ul li {
-      padding-left: 1.5rem;
+    #mainContent {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding-bottom: 400px;
+      color: #4b2e39;
       position: relative;
-      margin-bottom: 0.75rem;
+      padding-top: 20px;
     }
-
-    ul li::before {
-      content: "✔️";
-      position: absolute;
+    h1 {
+      font-size: 3rem;
+      margin: 20px 0 0;
+      color: #d5119dff;
+    }
+    .heart {
+      font-size: 4rem;
+      animation: heartbeat 1.5s infinite;
+    }
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+    #messageBox {
+      font-size: 1.4rem;
+      margin: 20px 0;
+      text-align: center;
+      white-space: pre-wrap;
+      transition: opacity .4s;
+      max-width: 450px;
+    }
+    button {
+      padding: 12px 25px;
+      background: #d6336c;
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background .3s;
+      margin: 5px;
+    }
+    button:hover {
+      background: #a1284f;
+    }
+    #controls {
+      margin: 10px;
+    }
+    #timer {
+      font-size: 1.1rem;
+      margin-top: 10px;
+    }
+    #garden {
+      position: relative;
+      bottom: 0;
       left: 0;
+      width: 100%;
+      height: 3000px; /* Increased to 3000px */
+      pointer-events: none;
+      margin-top: 30px;
+      overflow-x: hidden;
+      overflow-y: visible;
+      background: transparent;
     }
-
-    a {
-      color: #4CAF50;
+    .tulip {
+      position: absolute;
+      pointer-events: auto;
+      width: 50px;
+      user-select: none;
+      transition: transform .3s;
+      animation: sway 4s ease-in-out infinite, grow 0.6s ease forwards;
+      animation-iteration-count: infinite, 1;
+      transform-origin: bottom center; /* grow from bottom */
+      opacity: 0;
+      cursor: grab;
     }
-
-    @media (max-width: 600px) {
-      header, section, footer {
-        padding: 1rem;
+    .tulip:hover {
+      transform: scale(1.2) rotate(-5deg);
+    }
+    @keyframes sway {
+  0%   { transform: rotate(0deg); }
+  25%  { transform: rotate(1.5deg); }
+  50%  { transform: rotate(-1.5deg); }
+  75%  { transform: rotate(1.2deg); }
+  100% { transform: rotate(0deg); }
+}
+    @keyframes grow {
+      0% {
+        transform: scale(0);
+        opacity: 0;
       }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    footer {
+      margin-top: 5px;
+      font-size: .9rem;
+      color: #a67a8d;
     }
   </style>
 </head>
 <body>
 
-  <!-- Hero Section -->
-  <header>
-    <h1>Jush A. Muit</h1>
-    <p>Web Developer | Student | Freelancer</p>
-    <a href="#contact" class="cta-btn">📬 Hire Me</a>
-  </header>
+<!-- 🔐 LOGIN -->
+<div id="loginScreen">
+  <h2>Please Login</h2>
+  <input type="text" id="username" placeholder="Type your name" />
+  <input type="password" id="password" placeholder="Password" />
+  <button onclick="validateLogin()">Login</button>
+  <p id="loginError" style="color:#ffcccc; display:none;">Incorrect username or password.</p>
+</div>
 
-  <!-- About -->
-  <section id="about">
-    <h2>About Me</h2>
-    <p>I’m a college student passionate about building clean, responsive websites. I create simple business websites, landing pages, and personal projects using HTML, CSS, JavaScript, and WordPress.</p>
-  </section>
+<!-- 🌷 MAIN CONTENT -->
+<div id="mainContent" style="display: none; flex-direction: column; align-items: center;">
+  <h1>ABOUT YOU ^^ </h1>
+  
+  <div id="messageBox">Click "Next" to see a special message...</div>
 
-  <!-- Projects -->
-  <section id="projects">
-    <h2>My Work</h2>
+  <div id="controls">
+    <button id="nextBtn">Next Message</button>
+  </div>
 
-    <div class="project">
-      <img src="https://shuj-9.github.io/tulip-love-letter/assets/preview.png" alt="Tulip Love Website Preview">
-      <h3>Tulip Love Website 🌷</h3>
-      <p>Fun and animated interactive website made with HTML/CSS/JS.</p>
-      <a href="https://shuj-9.github.io/tulip-love-letter/" target="_blank">View Project</a>
-    </div>
+  <audio id="bgMusic" loop>
+    <source src="LilyOfTheValley.mp3" type="audio/mpeg" />
+  </audio>
 
-  </section>
+  <div id="timer"></div>
+  <div id="garden"></div>
+  <footer>FOR YOU ~ secret </footer>
+</div>
 
-  <!-- Services -->
-  <section id="services">
-    <h2>Services</h2>
-    <ul>
-      <li>Simple business websites (1–5 pages)</li>
-      <li>Personal portfolios</li>
-      <li>Responsive landing pages</li>
-      <li>Website redesign</li>
-    </ul>
-  </section>
+<script>
+  function validateLogin() {
+  const username = document.getElementById("username").value.trim(); // Still retrieving, in case you want to use it later
+  const password = document.getElementById("password").value.trim();
 
-  <!-- Contact -->
-  <section id="contact">
-    <h2>Contact Me</h2>
-    <p>📧 Email: <strong>joshmuit81@gmail.com</strong></p>
-    <p>🌍 <a href="https://fiverr.com/yourprofile" target="_blank">Hire me on Fiverr</a></p>
-  </section>
+  if (password === "tulips") {
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("mainContent").style.display = "flex";
+  } else {
+    const err = document.getElementById("loginError");
+    err.style.display = "block";
+    setTimeout(() => {
+      err.style.display = "none";
+    }, 3000);
+  }
+}
 
-  <!-- Footer -->
-  <footer>
-    <p>© 2025 Jush A. Muit. Built with 💻 by me.</p>
-  </footer>
+
+  // 🌸 MESSAGE LOGIC
+const messages = [
+  "I miss you, especially that moment when I first met you—at the place I call the samurai, beside the sea, HAHAHAH!",
+  "That was the first time I felt like everything was just so right with you.",
+  "I miss the way you told me about your day,",
+  "and the moment we took that picture of the sunset together.",
+  "You made me feel so much better just by being near you."
+];
+
+  let idx = 0;
+  let musicStarted = false;
+
+  document.getElementById('nextBtn').onclick = () => {
+    const audio = document.getElementById('bgMusic');
+    if (!musicStarted) {
+      audio.currentTime = 5; // start at 80 seconds
+      audio.volume = 1;
+      audio.play().catch(e => console.error("Audio error:", e));
+      musicStarted = true;
+    }
+
+    const box = document.getElementById('messageBox');
+    if (idx < messages.length) {
+      box.style.opacity = 0;
+      setTimeout(() => {
+        box.textContent = messages[idx];
+        box.style.opacity = 1;
+      }, 300);
+      idx++;
+    } else {
+      document.getElementById('nextBtn').disabled = true;
+      document.getElementById('nextBtn').textContent = "Scroll down";
+    }
+  };
+
+  // ⏳ COUNTDOWN TIMER
+  const target = new Date('2025-09-01T00:00:00');
+  function updateTimer() {
+    const now = new Date();
+    const diff = target - now;
+    document.getElementById('timer').textContent = diff > 0
+      ? `Countdown: ${Math.floor(diff / 86400000)}d ${Math.floor(diff % 86400000 / 3600000)}h ${Math.floor(diff % 3600000 / 60000)}m`
+      : '🌸 It’s today! 🌸';
+  }
+  setInterval(updateTimer, 1000);
+  updateTimer();
+
+ // 🌷 TULIP GARDEN - 1100 tulips closer to the bottom
+const garden = document.getElementById('garden');
+const tulipURLs = [
+  "https://gallery.yopriceville.com/var/resizes/Free-Clipart-Pictures/Flowers-PNG/Red_Tulip_Flower_Transparent_Image.png?m=1629831687",
+  "https://gallery.yopriceville.com/var/resizes/Free-Clipart-Pictures/Flowers-PNG/Red_Tulip_Transparent_Clip_Art_Image.png?m=1629831687"
+];
+
+
+function rand(min, max) {
+  return min + Math.random() * (max - min);
+}
+
+const tulipCount = 1100;
+for (let i = 0; i < tulipCount; i++) {
+  const img = document.createElement('img');
+  img.src = tulipURLs[Math.floor(Math.random() * tulipURLs.length)];
+  img.className = 'tulip';
+  
+  // Only in bottom 300px area
+  img.style.bottom = `${rand(-80, 400)}px`;
+
+  // Adjust for new smaller width
+  img.style.left = `${rand(0, window.innerWidth - 80)}px`;
+
+  // Add slight random scaling for realism
+  const scale = rand(0.8, 1.1).toFixed(2);
+  img.style.transform = `scale(${scale})`;
+
+  img.style.animationDelay = `${i * 0.5}s`; // staggered grow animation
+  garden.appendChild(img);
+}
+
+</script>
 
 </body>
 </html>
