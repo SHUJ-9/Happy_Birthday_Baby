@@ -8,16 +8,27 @@
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom, #87ceeb 0%, #a3d9a5 60%, #2d8c27 100%);
       overflow-x: hidden;
       overflow-y: auto;
       height: 100vh;
     }
+
+    /* Fullscreen video background */
+    #gardenBackgroundVideo {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -2;
+    }
+
     #loginScreen {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: #00c9f1ff;
+      background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)),
+                  url('log in or sign up.jpg') no-repeat center center/cover;
       z-index: 9999;
       display: flex;
       flex-direction: column;
@@ -25,6 +36,7 @@
       justify-content: center;
       color: #fff;
     }
+
     #loginScreen h2 {
       margin-bottom: 20px;
       font-weight: 600;
@@ -34,14 +46,11 @@
       font-size: 1rem;
       margin: 10px 0;
       width: 250px;
-      box-sizing: border-box;
       border-radius: 6px;
       border: none;
       outline: none;
     }
-    #loginScreen input::placeholder {
-      color: #aaa;
-    }
+
     #mainContent {
       display: none;
       flex-direction: column;
@@ -52,27 +61,32 @@
       position: relative;
       padding-top: 20px;
     }
+
     h1 {
       font-size: 3rem;
       margin: 20px 0 0;
       color: #d5119dff;
     }
+
     .heart {
       font-size: 4rem;
       animation: heartbeat 1.5s infinite;
     }
+
     @keyframes heartbeat {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.2); }
     }
-    #messageBox {
-      font-size: 1.4rem;
-      margin: 20px 0;
-      text-align: center;
-      white-space: pre-wrap;
-      transition: opacity .4s;
-      max-width: 450px;
-    }
+#messageBox {
+  font-size: 1.4rem;
+  margin: 20px 0;
+  text-align: center;
+  white-space: pre-wrap;
+  transition: opacity .4s;
+  max-width: 450px;
+  color: #69ffffff; /* 💖 Light pink example */
+}
+
     button {
       padding: 12px 25px;
       background: #d6336c;
@@ -86,47 +100,41 @@
     button:hover {
       background: #a1284f;
     }
+
     #controls {
-      margin: 10px;
+      margin: 100px;u8i;
     }
+
     #timer {
       font-size: 1.1rem;
       margin-top: 10px;
     }
-    #garden {
-      position: relative;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 3000px; /* Increased to 3000px */
-      pointer-events: none;
-      margin-top: 30px;
-      overflow-x: hidden;
-      overflow-y: visible;
-      background: transparent;
-    }
+
     .tulip {
       position: absolute;
       pointer-events: auto;
-      width: 50px;
+      width: 110px;
       user-select: none;
       transition: transform .3s;
       animation: sway 4s ease-in-out infinite, grow 0.6s ease forwards;
       animation-iteration-count: infinite, 1;
-      transform-origin: bottom center; /* grow from bottom */
+      transform-origin: bottom center;
       opacity: 0;
       cursor: grab;
     }
+
     .tulip:hover {
       transform: scale(1.2) rotate(-5deg);
     }
+
     @keyframes sway {
-  0%   { transform: rotate(0deg); }
-  25%  { transform: rotate(1.5deg); }
-  50%  { transform: rotate(-1.5deg); }
-  75%  { transform: rotate(1.2deg); }
-  100% { transform: rotate(0deg); }
-}
+      0%   { transform: rotate(0deg); }
+      25%  { transform: rotate(1.5deg); }
+      50%  { transform: rotate(-1.5deg); }
+      75%  { transform: rotate(1.2deg); }
+      100% { transform: rotate(0deg); }
+    }
+
     @keyframes grow {
       0% {
         transform: scale(0);
@@ -137,6 +145,7 @@
         opacity: 1;
       }
     }
+
     footer {
       margin-top: 5px;
       font-size: .9rem;
@@ -145,6 +154,12 @@
   </style>
 </head>
 <body>
+
+<!-- 🎥 Garden Background Video -->
+<video id="gardenBackgroundVideo" autoplay muted loop>
+  <source src="heart.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 <!-- 🔐 LOGIN -->
 <div id="loginScreen">
@@ -156,17 +171,17 @@
 </div>
 
 <!-- 🌷 MAIN CONTENT -->
-<div id="mainContent" style="display: none; flex-direction: column; align-items: center;">
-  <h1>ABOUT YOU ^^ </h1>
-  
-  <div id="messageBox">Click "Next" to see a special message...</div>
+<div id="mainContent">
+  <h1>ABOUT YOU</h1>
+
+  <div id="messageBox">CLICK "Next" to see a special message...</div>
 
   <div id="controls">
     <button id="nextBtn">Next Message</button>
   </div>
 
   <audio id="bgMusic" loop>
-    <source src="LilyOfTheValley.mp3" type="audio/mpeg" />
+    <source src="LilyofTheValley.mp3" type="audio/mpeg" />
   </audio>
 
   <div id="timer"></div>
@@ -176,30 +191,39 @@
 
 <script>
   function validateLogin() {
-  const username = document.getElementById("username").value.trim(); // Still retrieving, in case you want to use it later
-  const password = document.getElementById("password").value.trim();
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
 
-  if (password === "tulips") {
-    document.getElementById("loginScreen").style.display = "none";
-    document.getElementById("mainContent").style.display = "flex";
-  } else {
-    const err = document.getElementById("loginError");
-    err.style.display = "block";
-    setTimeout(() => {
-      err.style.display = "none";
-    }, 3000);
+    if (password === "tulips") {
+      document.getElementById("loginScreen").style.display = "none";
+      document.getElementById("mainContent").style.display = "flex";
+    } else {
+      const err = document.getElementById("loginError");
+      err.style.display = "block";
+      setTimeout(() => {
+        err.style.display = "none";
+      }, 3000);
+    }
   }
-}
 
-
-  // 🌸 MESSAGE LOGIC
-const messages = [
-  "I miss you, especially that moment when I first met you—at the place I call the samurai, beside the sea, HAHAHAH!",
-  "That was the first time I felt like everything was just so right with you.",
-  "I miss the way you told me about your day,",
-  "and the moment we took that picture of the sunset together.",
-  "You made me feel so much better just by being near you."
-];
+  // 💬 Message Logic
+  const messages = [
+    "I didn't plan to feel this way,",
+    "But somehow, you quietly made your way into my thoughts,",
+    "Into the silence between heartbeats,",
+    "Into the spaces I didn’t know needed light.",
+    "You’re not just someone I like,",
+    "You’re someone I feel drawn to, soul-first.",
+    "When I imagine love, I don’t see fireworks,",
+    "I see peace when I’m beside you,",
+    "I see growth, laughter, and late-night talks.",
+    "I don’t want this to be temporary.",
+    "I want to know your fears, your hopes, your favorite songs.",
+    "I want to hold your hand through chaos and calm.",
+    "You don’t have to say yes now, or tomorrow,",
+    "But please know: I want to build something real with you.",
+    "Not because I’m lonely, but because you feel like home."
+  ];
 
   let idx = 0;
   let musicStarted = false;
@@ -207,7 +231,7 @@ const messages = [
   document.getElementById('nextBtn').onclick = () => {
     const audio = document.getElementById('bgMusic');
     if (!musicStarted) {
-      audio.currentTime = 5; // start at 80 seconds
+      audio.currentTime = 5;
       audio.volume = 1;
       audio.play().catch(e => console.error("Audio error:", e));
       musicStarted = true;
@@ -223,11 +247,15 @@ const messages = [
       idx++;
     } else {
       document.getElementById('nextBtn').disabled = true;
-      document.getElementById('nextBtn').textContent = "Scroll down";
+      document.getElementById('nextBtn').textContent = "THIS IS FOR YOU";
+       showFlowerVideo();
+       setTimeout(() =>{
+        showFlowerVideo();
+       }, 3000);
     }
   };
 
-  // ⏳ COUNTDOWN TIMER
+  // ⏳ Timer
   const target = new Date('2025-09-01T00:00:00');
   function updateTimer() {
     const now = new Date();
@@ -239,38 +267,58 @@ const messages = [
   setInterval(updateTimer, 1000);
   updateTimer();
 
- // 🌷 TULIP GARDEN - 1100 tulips closer to the bottom
+  // pics of her
+ // glowing flower shows after last message
 const garden = document.getElementById('garden');
-const tulipURLs = [
-  "https://gallery.yopriceville.com/var/resizes/Free-Clipart-Pictures/Flowers-PNG/Red_Tulip_Flower_Transparent_Image.png?m=1629831687",
-  "https://gallery.yopriceville.com/var/resizes/Free-Clipart-Pictures/Flowers-PNG/Red_Tulip_Transparent_Clip_Art_Image.png?m=1629831687"
-];
-
-
 function rand(min, max) {
   return min + Math.random() * (max - min);
 }
 
-const tulipCount = 1100;
-for (let i = 0; i < tulipCount; i++) {
-  const img = document.createElement('img');
-  img.src = tulipURLs[Math.floor(Math.random() * tulipURLs.length)];
-  img.className = 'tulip';
-  
-  // Only in bottom 300px area
-  img.style.bottom = `${rand(-80, 400)}px`;
 
-  // Adjust for new smaller width
-  img.style.left = `${rand(0, window.innerWidth - 80)}px`;
+function showFlowerVideo() {
+  const video = document.createElement('video');
+  video.src = "flowerglowing.mp4";
+  video.autoplay = true;
+  video.loop = true;
+  video.muted = true;
+  video.playsInline = true; // iOS/web autoplay fix
 
-  // Add slight random scaling for realism
-  const scale = rand(0.8, 1.1).toFixed(2);
-  img.style.transform = `scale(${scale})`;
+  // Make it full screen
+  video.style.position = 'fixed';
+  video.style.top = '0';
+  video.style.left = '0';
+  video.style.width = '100vw';
+  video.style.height = '100vh';
+  video.style.objectFit = 'cover';
+  video.style.zIndex = '9998';
+  video.style.opacity = '0';
+  video.style.transition = 'opacity 1s ease';
 
-  img.style.animationDelay = `${i * 0.5}s`; // staggered grow animation
-  garden.appendChild(img);
+  // Add to body so it overlays everything
+  document.body.appendChild(video);
+
+  // Force play manually after adding to DOM
+  video.play().then(() => {
+    // Fade in after a brief delay to make sure it starts
+    setTimeout(() => {
+      video.style.opacity = '1';
+    }, 100);
+  }).catch(err => {
+    console.error("Autoplay failed:", err);
+  });
 }
-
+  const tulipCount = 1100;
+  for (let i = 0; i < tulipCount; i++) {
+    const img = document.createElement('img');
+    img.src = tulipURLs[Math.floor(Math.random() * tulipURLs.length)];
+    img.className = 'tulip';
+    img.style.bottom = `${rand(-80, 100)}px`;
+    img.style.left = `${rand(0, window.innerWidth - 80)}px`;
+    const scale = rand(0.8, 1.1).toFixed(2);
+    img.style.transform = `scale(${scale})`;
+    img.style.animationDelay = `${i * 0.5}s`;
+    garden.appendChild(img);
+  }
 </script>
 
 </body>
