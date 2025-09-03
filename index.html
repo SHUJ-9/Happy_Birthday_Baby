@@ -12,6 +12,8 @@
       overflow-y: auto;
       height: 100vh;
     }
+
+    /* Background video */
     #gardenBackgroundVideo {
       position: fixed;
       top: 0; left: 0;
@@ -20,6 +22,8 @@
       object-fit: cover;
       z-index: -2;
     }
+
+    /* Login screen */
     #loginScreen {
       position: fixed;
       top: 0; left: 0;
@@ -46,6 +50,8 @@
       border: none;
       outline: none;
     }
+
+    /* Main content */
     #mainContent {
       display: none;
       flex-direction: column;
@@ -56,11 +62,14 @@
       position: relative;
       padding-top: 20px;
     }
+
     h1 {
       font-size: 3rem;
       margin: 20px 0 0;
       color: #d5119dff;
     }
+
+    /* Heartbeat animation */
     .heart {
       font-size: 4rem;
       animation: heartbeat 1.5s infinite;
@@ -69,15 +78,36 @@
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.2); }
     }
+
+    /* Message box with frame */
     #messageBox {
       font-size: 1.4rem;
-      margin: 20px 0;
+      margin: 20px auto;
       text-align: center;
-      white-space: pre-wrap;
+      white-space: pre-wrap;     
       transition: opacity .4s;
-      max-width: 450px;
+      max-width: 500px;           /* wider for frame */
       color: #fc0ac8ff;
+
+      /* Frame styles */
+      background: rgba(255, 255, 255, 0.85); /* white frosted background */
+      padding: 25px 30px;        /* spacing inside */
+      border-radius: 18px;        /* rounded corners */
+      border: 3px solid #ff66b2;  /* pink border */
+      backdrop-filter: blur(8px); /* frosted glass effect */
+      box-shadow: 0 0 25px rgba(255, 20, 147, 0.6);
+
+      /* Glowing animation */
+      animation: glowPulse 3s infinite;
     }
+
+    @keyframes glowPulse {
+      0%   { box-shadow: 0 0 10px rgba(255, 20, 147, 0.4); }
+      50%  { box-shadow: 0 0 25px rgba(255, 20, 147, 0.8); }
+      100% { box-shadow: 0 0 10px rgba(255, 20, 147, 0.4); }
+    }
+
+    /* Buttons */
     button {
       padding: 12px 25px;
       background: #d6336c;
@@ -91,6 +121,8 @@
     button:hover {
       background: #a1284f;
     }
+
+    /* Controls */
     #controls {
       margin: 100px;
     }
@@ -98,6 +130,8 @@
       font-size: 1.1rem;
       margin-top: 10px;
     }
+
+    /* Tulips */
     .tulip {
       position: absolute;
       pointer-events: auto;
@@ -124,6 +158,8 @@
       0% { transform: scale(0); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
     }
+
+    /* Footer */
     footer {
       margin-top: 5px;
       font-size: .9rem;
@@ -133,12 +169,13 @@
 </head>
 <body>
 
+<!-- Background heart video -->
 <video id="gardenBackgroundVideo" autoplay muted loop playsinline>
   <source src="heart.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
 
-
+<!-- Login screen -->
 <div id="loginScreen">
   <h2>Please Login</h2>
   <input type="text" id="username" placeholder="Type your name" />
@@ -147,6 +184,7 @@
   <p id="loginError" style="color:#ffcccc; display:none;">Incorrect username or password.</p>
 </div>
 
+<!-- Main content -->
 <div id="mainContent">
   <h1>ABOUT YOU</h1>
   <div id="messageBox">CLICK "Next" to see a special message...</div>
@@ -158,7 +196,7 @@
   </audio>
   <div id="timer"></div>
   <div id="garden"></div>
-  <footer>FOR YOU ~ secret </footer>
+  <footer>^^</footer>
 </div>
 
 <script>
@@ -189,7 +227,7 @@
     "I want to know your fears, your hopes, your favorite songs.",
     "I want to hold your hand through chaos and calm.",
     "You don’t have to say yes now, or tomorrow,",
-    "But please know: I want to build something real with you.",
+    "But please know. I want to build something real with you.",
     "Not because I’m lonely, but because you feel like home."
   ];
 
@@ -221,60 +259,64 @@
       idx++;
     } else {
       document.getElementById('nextBtn').disabled = true;
-      document.getElementById('nextBtn').textContent = "THIS IS FOR YOU";
+      document.getElementById('nextBtn').textContent = "THIS IS FOR YOU BABY!";
       setTimeout(showFlowerVideo, 3000);
     }
   };
-
-  const target = new Date('2025-09-01T00:00:00');
-  function updateTimer() {
-    const now = new Date();
-    const diff = target - now;
-    document.getElementById('timer').textContent = diff > 0
-      ? `Countdown: ${Math.floor(diff / 86400000)}d ${Math.floor(diff % 86400000 / 3600000)}h ${Math.floor(diff % 3600000 / 60000)}m`
-      : '🌸 It’s today! 🌸';
-  }
-  setInterval(updateTimer, 1000);
-  updateTimer();
 
   const garden = document.getElementById('garden');
   function rand(min, max) {
     return min + Math.random() * (max - min);
   }
 
- function showFlowerVideo() {
+function showFlowerVideo() {
   const video = document.createElement('video');
   video.src = "flowerglowing.mp4";
   video.autoplay = true;
-  video.loop = true;
+  video.loop = false;   // don’t loop
   video.muted = true;
   video.playsInline = true;
   video.style.position = 'fixed';
   video.style.top = '50%';
   video.style.left = '50%';
-  video.style.transform = 'translate(-50%, -50%)'; // centers it
+  video.style.transform = 'translate(-50%, -50%)';
   video.style.width = '100%';
   video.style.height = '100%';
-  video.style.objectFit = 'contain'; // keeps aspect ratio
+  video.style.objectFit = 'contain';
   video.style.maxWidth = '100vw';
   video.style.maxHeight = '100vh';
   video.style.zIndex = '9998';
   video.style.opacity = '0';
-  video.style.transition = 'opacity 1s ease';
+  video.style.transition = 'opacity 2s ease'; // smooth fade
   document.body.appendChild(video);
 
   video.play().then(() => {
     setTimeout(() => {
-      video.style.opacity = '1';
+      video.style.opacity = '1'; // fade in
     }, 100);
   }).catch(err => {
     console.error("Autoplay failed:", err);
   });
+
+  // Freeze & fade out after end
+  video.addEventListener("ended", () => {
+    video.pause();
+    video.currentTime = video.duration; // freeze last frame
+
+    setTimeout(() => {
+      video.style.opacity = '0'; // fade out after 2s
+    }, 2000);
+
+    // Optional: remove video completely after fade-out
+    setTimeout(() => {
+      video.remove();
+    }, 4000);
+  });
 }
 
 
-  // Tulip images code (unchanged)
-  const tulipURLs = []; // Make sure to fill this with your tulip image paths
+  // Tulip images
+  const tulipURLs = []; // Add your tulip image paths here
   const tulipCount = 1100;
   for (let i = 0; i < tulipCount; i++) {
     const img = document.createElement('img');
@@ -291,4 +333,3 @@
 
 </body>
 </html>
-
